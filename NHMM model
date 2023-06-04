@@ -1,0 +1,69 @@
+import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import random
+
+# Step 1: Data Preparation
+with open("Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
+    text = file.read()
+
+# Preprocessing steps
+
+# Step 2: Tokenization
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts([text])
+total_words = len(tokenizer.word_index) + 1
+
+# Step 3: Sequencing
+input_sequences = []
+output_words = []
+sequence_length = 25
+
+# Generate input-output pairs
+tokens = tokenizer.texts_to_sequences([text])[0]
+for i in range(sequence_length, len(tokens)):
+    input_sequence = tokens[i - sequence_length:i]
+    output_word = tokens[i]
+    input_sequences.append(input_sequence)
+    output_words.append(output_word)
+
+# Convert to numpy arrays
+input_sequences = np.array(input_sequences)
+output_words = np.array(output_words)
+
+# Step 4: NHMM Model
+transition_matrix = np.zeros((total_words, total_words))
+for sequence in input_sequences:
+    for i in range(1, len(sequence)):
+        prev_word_id = sequence[i-1]
+        curr_word_id = sequence[i]
+        transition_matrix[prev_word_id][curr_word_id] += 1
+
+# Normalize transition matrix
+for i in range(total_words):
+    row_sum = transition_matrix[i].sum()
+    if row_sum != 0:
+        transition_matrix[i] /= row_sum
+
+def sample_next_word(seed_word_id):
+    next_word_probs = transition_matrix[seed_word_id]
+    next_word_probs[np.isnan(next_word_probs)] = 0  # Replace NaN with 0
+    next_word_probs /= next_word_probs.sum()  # Normalize probabilities
+    next_word_id = np.random.choice(range(total_words), p=next_word_probs)
+    return next_word_id
+
+# Step 6: Text Generation
+seed_text = "I'm the king"
+num_words = 50
+
+seed_sequence = tokenizer.texts_to_sequences([seed_text])[0]
+generated_sequence = seed_sequence[:]
+
+for _ in range(num_words):
+    next_word_id = sample_next_word(generated_sequence[-1])
+    generated_sequence.append(next_word_id)
+
+generated_lyrics = tokenizer.sequences_to_texts([generated_sequence])[0]
+
+# Print the generated rap lyrics
+print(generated_lyrics)
