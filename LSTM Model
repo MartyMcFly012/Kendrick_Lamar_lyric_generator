@@ -1,0 +1,69 @@
+import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Embedding
+
+# Step 1: Data Preparation
+with open("Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
+    text = file.read()
+
+# Preprocessing steps
+
+# Step 2: Tokenization
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts([text])
+total_words = len(tokenizer.word_index) + 1
+
+# Step 3: Sequencing
+input_sequences = []
+output_words = []
+sequence_length = 25
+
+# Generate input-output pairs
+tokens = tokenizer.texts_to_sequences([text])[0]
+for i in range(sequence_length, len(tokens)):
+    input_sequence = tokens[i - sequence_length:i]
+    output_word = tokens[i]
+    input_sequences.append(input_sequence)
+    output_words.append(output_word)
+
+# Convert to numpy arrays
+input_sequences = np.array(input_sequences)
+output_words = np.array(output_words)
+
+# Step 4: LSTM Model
+model = Sequential()
+model.add(Embedding(total_words, 100, input_length=sequence_length))
+model.add(LSTM(150))
+model.add(Dense(total_words, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam')
+
+# Convert output_words to categorical representation
+output_words_categorical = np.zeros((len(output_words), total_words))
+output_words_categorical[np.arange(len(output_words)), output_words] = 1
+
+# Train the model
+model.fit(input_sequences, output_words_categorical, epochs=10, verbose=1)
+
+def sample_next_word(seed_sequence):
+    seed_sequence = pad_sequences([seed_sequence], maxlen=sequence_length)
+    predicted_probs = model.predict(seed_sequence)[0]
+    next_word_id = np.random.choice(total_words, p=predicted_probs)
+    return next_word_id
+
+# Step 6: Text Generation
+seed_text = "I'm the king"
+num_words = 50
+
+seed_sequence = tokenizer.texts_to_sequences([seed_text])[0]
+generated_sequence = seed_sequence[:]
+
+for _ in range(num_words):
+    next_word_id = sample_next_word(generated_sequence[-sequence_length:])
+    generated_sequence.append(next_word_id)
+
+generated_lyrics = tokenizer.sequences_to_texts([generated_sequence])[0]
+
+# Print the generated rap lyrics
+print(generated_lyrics)
