@@ -37,7 +37,7 @@ model = Sequential()
 model.add(Embedding(total_words, 100, input_length=sequence_length))
 model.add(LSTM(150))
 model.add(Dense(total_words, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.Adam(0.1))
 
 # Convert output_words to categorical representation
 output_words_categorical = np.zeros((len(output_words), total_words))
