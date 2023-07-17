@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rap Lyrics Generator</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 600px;
+      }
+
+      .input-container {
+        margin-bottom: 20px;
+      }
+
+      .btn-generate {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Kendrick Lamar Lyrics Generator</h1>
+      <form method="POST" action="/">
+        <div class="input-container">
+          <label for="seed_text">Seed Text:</label>
+          <input type="text" id="seed_text" name="seed_text" required />
+        </div>
+        <div class="input-container">
+          <label for="num_words">Number of Words:</label>
+          <input type="number" id="num_words" name="num_words" required />
+        </div>
+        <div class="input-container">
+          <label for="diversity">Diversity:</label>
+          <input
+            type="number"
+            id="diversity"
+            name="diversity"
+            step="0.1"
+            min="0.1"
+            max="2.0"
+            value="0.8"
+            required
+          />
+        </div>
+        <button class="btn-generate" type="submit">Generate Lyrics</button>
+      </form>
+    </div>
+  </body>
+</html>
