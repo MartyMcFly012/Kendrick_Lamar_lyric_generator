@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generated Rap Lyrics</title>
+    <!-- Importing poppins from Google-->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" />
+    <!-- Including Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Including Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+      img {
+        border-radius: 50%;
+        max-width: 70vw;
+        height: auto;
+      }
+      /* Add a box-shadow to the image */
+      .col-lg-6 img {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      body {
+        background: url("/static/images/background12.png");
+        background-position: center;
+        background-size: cover;
+      }
+      /* Set all text to white */
+      body,
+      h1,
+      label,
+      input,
+      button {
+        color: white;
+        font-family: "Poppins", sans-serif;
+      }
+      /* Blur background container */
+      .blur-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(
+          0,
+          0,
+          0,
+          0.5
+        ); /* Adjust the opacity to control the blur intensity */
+        backdrop-filter: blur(8px); /* Adjust the blur radius as needed */
+        z-index: -1;
+      }
+      /* Grid overlay */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px
+          );
+        background-size: 20px 20px;
+        pointer-events: none; /* Allow clicking on elements behind the overlay */
+        z-index: -1; /* Adjust z-index to make the grid overlay appear above other elements */
+      }
+
+      /* Additional styles for the lyrics container */
+      .container {
+        text-align: center;
+        max-width: 600px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .lyrics {
+        font-size: 18px;
+        line-height: 1.5;
+        white-space: pre-wrap; /* Allow line breaks */
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Kendrick Lamar Generated Lyrics:</h1>
+      <div class="lyrics">{{ generated_lyrics }}</div>
+    </div>
+  </body>
+</html>

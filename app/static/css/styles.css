@@ -1,0 +1,77 @@
+img {
+    border-radius: 50%;
+    max-width: 70vw;
+    height: auto;
+  }
+  /* Add a box-shadow to the image */
+  .col-lg-6 img {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  body {
+    background: url("background7.png");
+    background-position: center;
+    background-size: cover;
+  }
+  /* Set all text to white */
+  body,
+  h1,
+  label,
+  input,
+  button {
+    color: white;
+    font-family: "Poppins", sans-serif;
+  }
+
+  /* Adjust the background color of the input fields for better visibility */
+  input {
+    background-color: #333;
+  }
+
+  .generator-containter {
+    color: darkslategrey;
+  }
+  /* Blur background container */
+  .blur-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(
+      0,
+      0,
+      0,
+      0.5
+    ); /* Adjust the opacity to control the blur intensity */
+    backdrop-filter: blur(8px); /* Adjust the blur radius as needed */
+    z-index: -1;
+  }
+
+  /* Add solid black background for the generator container */
+  .generator-container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  /* Grid overlay */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 1px
+      );
+    background-size: 20px 20px;
+    pointer-events: none; /* Allow clicking on elements behind the overlay */
+    z-index: -1; /* Adjust z-index to make the grid overlay appear above other elements */
+  }

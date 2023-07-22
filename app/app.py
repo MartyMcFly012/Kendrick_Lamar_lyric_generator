@@ -4,6 +4,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 app = Flask(__name__)
+app._static_folder = 'static'
 
 # Step 1 to Step 6: Data preparation and text generation
 
@@ -63,7 +64,6 @@ def home():
         seed_text = request.form['seed_text']
         num_words = int(request.form['num_words'])
         diversity = float(request.form['diversity'])
-
         # Step 6: Text Generation
         seed_sequence = tokenizer.texts_to_sequences([seed_text])[0]
         generated_sequence = seed_sequence[:]
