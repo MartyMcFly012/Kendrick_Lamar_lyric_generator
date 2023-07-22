@@ -9,7 +9,7 @@ app._static_folder = 'static'
 # Step 1 to Step 6: Data preparation and text generation
 
 # Load the Kendrick Lamar lyrics from a file
-with open("Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
+with open("app/Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
 # Preprocessing steps

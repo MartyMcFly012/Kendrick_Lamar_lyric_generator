@@ -1,0 +1,55 @@
+I'm not sure how any of this works so please send helpful and descriptive feedback if you aren't able to get the flask app running on your system.
+
+Most of the time I just pray everything installed correctly.
+
+The main focus of this repository is the flask app. To run that you will need to install flask:
+To install Flask, you can use pip, the package installer for Python. Follow these steps to install Flask:
+
+---
+
+Open a Command Prompt or Terminal: Open a command prompt (Windows) or terminal (macOS/Linux).
+
+Install Flask: use pip to install Flask (or follow the below instructions to install pip in a virtual environment):
+pip install flask
+
+Create a Virtual Environment (optional but recommended):
+It's a good practice to create a virtual environment to isolate your project's
+dependencies. If you haven't installed the venv module, you can do so using the following command:
+
+python -m pip install --user virtualenv
+
+Then, create a virtual environment for your Flask project.
+
+Navigate to your project directory and run:
+python -m venv venv
+This will create a virtual environment named "venv" in your project directory.
+
+Activate the Virtual Environment (optional but recommended):
+Depending on your operating system, activate the virtual environment:
+
+Windows:
+venv\Scripts\activate
+
+macOS/Linux:
+source venv/bin/activate
+
+Install Flask: With the virtual environment activated, use pip to install Flask:
+pip install flask
+
+This command will download and install Flask and its dependencies.
+
+---
+
+Besides that, you will most likely need to run the following lines
+cd app
+FLASK_APP=app.py
+flask run
+
+Next, you will want to open your preferred browser and go to the provided
+local server in hich may look something like this: http://127.0.0.1:5000
+
+Finally, you can enjoy the objectively-defined art this app generates.
+
+Curious minds might wish to look at the various models I experimented with using for language generation.
+A future me add a feature for users to dynamically switch between models. But that is a problem for future me.
+Thanks for checking out my project I hope you enjoy what I was able to accomplish here.
