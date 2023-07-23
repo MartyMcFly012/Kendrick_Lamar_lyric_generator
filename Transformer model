@@ -35,7 +35,8 @@ output_words = np.array(output_words)
 # Step 4: Transformer Model
 model = Sequential()
 model.add(Embedding(total_words, 100, input_length=sequence_length))
-model.add(Transformer(num_heads=2, d_model=256, num_layers=2, activation="relu"))
+model.add(Transformer(num_heads=2, d_model=256,
+          num_layers=2, activation="relu"))
 model.add(Dense(total_words, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
@@ -46,11 +47,13 @@ output_words_categorical[np.arange(len(output_words)), output_words] = 1
 # Train the model
 model.fit(input_sequences, output_words_categorical, epochs=100, verbose=1)
 
+
 def sample_next_word(seed_sequence):
     seed_sequence = pad_sequences([seed_sequence], maxlen=sequence_length)
     predicted_probs = model.predict(seed_sequence)[0]
     next_word_id = np.random.choice(total_words, p=predicted_probs)
     return next_word_id
+
 
 # Step 6: Text Generation
 seed_text = "I'm the king"

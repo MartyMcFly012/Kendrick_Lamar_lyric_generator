@@ -2,14 +2,13 @@ from flask import Flask, render_template, request
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
 app = Flask(__name__)
 app._static_folder = 'static'
 
 # Step 1 to Step 6: Data preparation and text generation
 
 # Load the Kendrick Lamar lyrics from a file
-with open("app/Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
+with open("Kendrick_Lamar_lyrics.txt", "r", encoding="utf-8") as file:
     text = file.read()
 
 # Preprocessing steps
@@ -50,12 +49,34 @@ transition_matrix = transition_matrix / \
     transition_matrix.sum(axis=1, keepdims=True)
 
 
-def sample_next_word(seed_word_id, diversity=1.0):
+def sample_next_word(seed_word_id, diversity=.7):
     next_word_probs = transition_matrix[seed_word_id]
     scaled_probs = np.power(next_word_probs, diversity)
     scaled_probs /= np.sum(scaled_probs)
     next_word_id = np.random.choice(range(total_words), p=scaled_probs)
     return next_word_id
+
+
+def beam_search(seed_sequence, num_words, diversity=.275, beam_width=3):
+    sequences = [(seed_sequence, 0.0)]
+
+    for _ in range(num_words):
+        candidates = []
+
+        for sequence, score in sequences:
+            next_word_id = sample_next_word(
+                sequence[-1], diversity=diversity)
+            candidate_sequence = sequence + [next_word_id]
+            candidate_score = score + \
+                np.log(transition_matrix[sequence[-1]][next_word_id])
+
+            candidates.append((candidate_sequence, candidate_score))
+
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        sequences = candidates[:beam_width]
+
+    generated_sequence = sequences[0][0]
+    return generated_sequence
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -64,9 +85,11 @@ def home():
         seed_text = request.form['seed_text']
         num_words = int(request.form['num_words'])
         diversity = float(request.form['diversity'])
+
         # Step 6: Text Generation
         seed_sequence = tokenizer.texts_to_sequences([seed_text])[0]
-        generated_sequence = seed_sequence[:]
+        generated_sequence = beam_search(
+            seed_sequence, num_words, beam_width=3, diversity=.275)
 
         for _ in range(num_words):
             next_word_id = sample_next_word(
@@ -188,7 +211,36 @@ def home():
             revised_text = ". ".join(revised_lines)
         else:
             revised_text = expanded_text
+        # Reflect Kendrick's lyrical style and themes
+        kendrick_themes = [
+            "struggle", "hope", "justice", "racism", "equality", "perseverance", "consciousness", "truth", "resilience", "unity"
+        ]
 
+        for theme in kendrick_themes:
+            if theme in generated_lyrics.lower():
+                generated_lyrics = generated_lyrics.replace(
+                    theme, f"'{theme.capitalize()}'")
+
+        # Adjust lyrical style for authenticity
+        generated_lyrics = generated_lyrics.replace(" i ", " I ")
+        generated_lyrics = generated_lyrics.replace(" ai ", " I ")
+        generated_lyrics = generated_lyrics.replace(
+            "i'm", "I'm")
+        generated_lyrics = generated_lyrics.replace(" im ", " I'm ")
+        generated_lyrics = generated_lyrics.replace(
+            "i've", "I've")
+        generated_lyrics = generated_lyrics.replace(
+            "i'll", "I'll")
+        generated_lyrics = generated_lyrics.replace(
+            "i'd", "I'd")
+        generated_lyrics = generated_lyrics.replace(
+            "i'd", "I'd")
+        generated_lyrics = generated_lyrics.replace(
+            " imma ", " I'ma ")
+        generated_lyrics = generated_lyrics.replace(
+            "gonna", "gon'")
+
+        # Render the revised lyrics
         return render_template('result.html', generated_lyrics=revised_text)
 
     return render_template('index.html')
