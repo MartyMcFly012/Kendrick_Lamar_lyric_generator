@@ -49,11 +49,23 @@ transition_matrix = transition_matrix / \
     transition_matrix.sum(axis=1, keepdims=True)
 
 
-def sample_next_word(seed_word_id, diversity=.7):
+def sample_next_word(seed_word_id, diversity=.7, top_p=0.8):
     next_word_probs = transition_matrix[seed_word_id]
-    scaled_probs = np.power(next_word_probs, diversity)
+    sorted_word_ids = np.argsort(next_word_probs)[::-1]
+    cumulative_probs = np.cumsum(next_word_probs[sorted_word_ids])
+    sorted_indices = np.arange(len(next_word_probs))[::-1]
+
+    # Truncate to keep only the most likely words whose cumulative probability exceeds top_p
+    sorted_indices = sorted_indices[cumulative_probs > top_p]
+
+    # Apply diversity to the remaining words
+    scaled_probs = next_word_probs[sorted_word_ids[sorted_indices]]
+    scaled_probs = np.power(scaled_probs, diversity)
     scaled_probs /= np.sum(scaled_probs)
-    next_word_id = np.random.choice(range(total_words), p=scaled_probs)
+
+    # Select a word randomly based on the scaled probabilities
+    next_word_id = np.random.choice(
+        sorted_word_ids[sorted_indices], p=scaled_probs)
     return next_word_id
 
 
@@ -211,34 +223,28 @@ def home():
             revised_text = ". ".join(revised_lines)
         else:
             revised_text = expanded_text
+
         # Reflect Kendrick's lyrical style and themes
         kendrick_themes = [
             "struggle", "hope", "justice", "racism", "equality", "perseverance", "consciousness", "truth", "resilience", "unity"
         ]
 
         for theme in kendrick_themes:
-            if theme in generated_lyrics.lower():
-                generated_lyrics = generated_lyrics.replace(
+            if theme in revised_text.lower():
+                revised_text = revised_text.replace(
                     theme, f"'{theme.capitalize()}'")
 
         # Adjust lyrical style for authenticity
-        generated_lyrics = generated_lyrics.replace(" i ", " I ")
-        generated_lyrics = generated_lyrics.replace(" ai ", " I ")
-        generated_lyrics = generated_lyrics.replace(
-            "i'm", "I'm")
-        generated_lyrics = generated_lyrics.replace(" im ", " I'm ")
-        generated_lyrics = generated_lyrics.replace(
-            "i've", "I've")
-        generated_lyrics = generated_lyrics.replace(
-            "i'll", "I'll")
-        generated_lyrics = generated_lyrics.replace(
-            "i'd", "I'd")
-        generated_lyrics = generated_lyrics.replace(
-            "i'd", "I'd")
-        generated_lyrics = generated_lyrics.replace(
-            " imma ", " I'ma ")
-        generated_lyrics = generated_lyrics.replace(
-            "gonna", "gon'")
+        revised_text = revised_text.replace(" i ", " I ")
+        revised_text = revised_text.replace(" ai ", " I ")
+        revised_text = revised_text.replace("i'm", "I'm")
+        revised_text = revised_text.replace(" im ", " I'm ")
+        revised_text = revised_text.replace("i've", "I've")
+        revised_text = revised_text.replace("i'll", "I'll")
+        revised_text = revised_text.replace("i'd", "I'd")
+        revised_text = revised_text.replace("i'd", "I'd")
+        revised_text = revised_text.replace(" imma ", " I'ma ")
+        revised_text = revised_text.replace("gonna", "gon'")
 
         # Render the revised lyrics
         return render_template('result.html', generated_lyrics=revised_text)
