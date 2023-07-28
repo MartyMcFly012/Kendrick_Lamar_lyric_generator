@@ -1,8 +1,4 @@
-I'm not sure how any of this works so please send helpful and descriptive feedback if you aren't able to get the flask app running on your system.
-
-Most of the time I just pray everything installed correctly.
-
-The main focus of this repository is the flask app. To run that you will need to install flask:
+To run the app.py file you will need to install flask:
 To install Flask, you can use pip, the package installer for Python. Follow these steps to install Flask:
 
 ---
