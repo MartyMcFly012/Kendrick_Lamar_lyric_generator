@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import numpy as np
-from tensorflow.keras.layers import Embeddings
-from tensorflow.keras.preprocessing.text import Tokenizer, one_hot
+from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 app = Flask(__name__)
 app._static_folder = 'static'

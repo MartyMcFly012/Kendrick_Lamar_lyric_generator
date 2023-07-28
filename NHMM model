@@ -45,12 +45,14 @@ for i in range(total_words):
     if row_sum != 0:
         transition_matrix[i] /= row_sum
 
+
 def sample_next_word(seed_word_id):
     next_word_probs = transition_matrix[seed_word_id]
     next_word_probs[np.isnan(next_word_probs)] = 0  # Replace NaN with 0
     next_word_probs /= next_word_probs.sum()  # Normalize probabilities
     next_word_id = np.random.choice(range(total_words), p=next_word_probs)
     return next_word_id
+
 
 # Step 6: Text Generation
 seed_text = "I'm the king"
