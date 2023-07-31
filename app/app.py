@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 app = Flask(__name__)
 app._static_folder = 'static'
 
@@ -43,6 +43,10 @@ for sequence in input_sequences:
         prev_word_id = sequence[i-1]
         curr_word_id = sequence[i]
         transition_matrix[prev_word_id][curr_word_id] += 1
+
+# Assuming transition_matrix is a NumPy array
+# Replace NaN values with 0
+transition_matrix[np.isnan(transition_matrix)] = 0
 
 # Normalize transition matrix
 transition_matrix = transition_matrix / \
@@ -245,6 +249,8 @@ def home():
         revised_text = revised_text.replace("i'd", "I'd")
         revised_text = revised_text.replace(" imma ", " I'ma ")
         revised_text = revised_text.replace("gonna", "gon'")
+        # Add sentence breaks (double line breaks) to improve text flow
+        revised_text = revised_text.replace(". ", ".\n\n")
 
         # Render the revised lyrics
         return render_template('result.html', generated_lyrics=revised_text)
