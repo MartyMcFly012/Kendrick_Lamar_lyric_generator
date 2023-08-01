@@ -42,10 +42,10 @@ FLASK_APP=app.py
 flask run
 
 Next, you will want to open your preferred browser and go to the provided
-local server in hich may look something like this: http://127.0.0.1:5000
+local server which may look something like this: http://127.0.0.1:5000
 
 Finally, you can enjoy the objectively-defined art this app generates.
 
 Curious minds might wish to look at the various models I experimented with using for language generation.
-A future me add a feature for users to dynamically switch between models. But that is a problem for future me.
+I may decide to add a feature for users to dynamically switch between models. But that is a problem for future me.
 Thanks for checking out my project I hope you enjoy what I was able to accomplish here.
